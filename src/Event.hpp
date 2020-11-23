@@ -9,13 +9,15 @@ enum class EventCategory
 {
     None,
     KeyEvent,
-    MouseEvent
+    MouseButtonEvent,
+    MouseWheelEvent
 };
 
 enum class EventType
 {
     None,
-    KeyPressedEvent, KeyReleasedEvent
+    KeyPressedEvent, KeyReleasedEvent,
+    MousePressedEvent, MouseReleasedEvent
 };
 
 class Event

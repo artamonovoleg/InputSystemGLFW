@@ -4,8 +4,6 @@
 #include "EventSystem.hpp"
 #include "InputHandler.hpp"
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
 int main()
 {
     glfwInit();
@@ -19,8 +17,7 @@ int main()
     window = glfwCreateWindow(width, height, "Events", nullptr, nullptr);
     glfwMakeContextCurrent(window);
 
-//    glfwSetKeyCallback(window, key_callback);
-    EventSystem::Init(window, WindowManager::GLFW_WM);
+    EventSystem::Init();
 
     while(!InputHandler::IsKeyDown(GLFW_KEY_ESCAPE))
     {
@@ -30,18 +27,19 @@ int main()
             std::cout << "Q released" << std::endl;
         if (InputHandler::IsKeyDown(GLFW_KEY_W))
             std::cout << "W down" << std::endl;
+        if (InputHandler::IsButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
+            std::cout << "LMB pressed" << std::endl;
+        if (InputHandler::IsButtonDown(GLFW_MOUSE_BUTTON_RIGHT))
+            std::cout << "RMB held" << std::endl;
+        if (InputHandler::IsButtonReleased(GLFW_MOUSE_BUTTON_MIDDLE))
+            std::cout << "Wheel released" << std::endl;
+        if (InputHandler::IsScrollingUp())
+            std::cout << "Scroll up" << std::endl;
+        if (InputHandler::IsScrollingDown())
+            std::cout << "Scroll down" << std::endl;
         glfwPollEvents();
     }
 
     glfwTerminate();
     return 0;
-}
-
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (action == 1)
-        EventSystem::HandleNewEvent(KeyPressedEvent(key));
-    else
-    if (action == 0)
-        EventSystem::HandleNewEvent(KeyReleasedEvent(key));
 }

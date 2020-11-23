@@ -14,22 +14,11 @@ enum class WindowManager
 class EventSystem
 {
     private:
-        static void KeyBoardFun(int key, int action);
+        static void OnKeyAction(int key, int action);
+        static void OnButtonAction(int button, int action);
+        static void OnWheelAction(double offset);
     public:
-        static void Init(void* window, WindowManager wm);
-        template <typename T>
-        static void HandleNewEvent(const T& ev)
-        {
-            // do some stuff
-            switch (ev.category)
-            {
-                case EventCategory::KeyEvent:
-                    InputHandler::UpdateKeyState(ev.GetKey(), ev.GetState());
-                    break;
-                case EventCategory::MouseEvent:
-                    break;
-                case EventCategory::None:
-                    break;
-            }
-        }
+        static void Init();
+        static void HandleNewEvent(const Event& ev);
+
 };

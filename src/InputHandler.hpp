@@ -4,6 +4,7 @@
 
 #pragma once
 #include "KeyEvent.hpp"
+#include "MouseEvent.hpp"
 
 class InputHandler
 {
@@ -12,38 +13,20 @@ class InputHandler
         ~InputHandler() = default;
 
         static KeyState m_Keys[1024];
+        static ButtonState m_Buttons[10];
+        static WheelState m_WheelState;
     public:
-        static void UpdateKeyState(int key, KeyState state)
-        {
-            m_Keys[key] = state;
-        }
+        static void UpdateKeyState(int key, KeyState state);
+        static bool IsKeyPressed(int key);
+        static bool IsKeyDown(int key);
+        static bool IsKeyReleased(int key);
 
-        static bool IsKeyPressed(int key)
-        {
-            bool ret = false;
-            if (m_Keys[key] == KeyState::PRESSED)
-            {
-                ret = true;
-                m_Keys[key] = KeyState::HELD;
-            }
+        static void UpdateButtonState(int button, ButtonState state);
+        static bool IsButtonPressed(int button);
+        static bool IsButtonDown(int button);
+        static bool IsButtonReleased(int button);
 
-            return ret;
-        }
-
-        static bool IsKeyDown(int key)
-        {
-            return (m_Keys[key] == KeyState::PRESSED || m_Keys[key] == KeyState::HELD);
-        }
-
-        static bool IsKeyReleased(int key)
-        {
-            bool ret = false;
-            if (m_Keys[key] == KeyState::RELEASED)
-            {
-                ret = true;
-                m_Keys[key] = KeyState::NONE;
-            }
-
-            return ret;
-        }
+        static void UpdateWheelState(WheelState state);
+        static bool IsScrollingUp();
+        static bool IsScrollingDown();
 };
