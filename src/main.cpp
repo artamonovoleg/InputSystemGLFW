@@ -19,7 +19,8 @@ int main()
     window = glfwCreateWindow(width, height, "Events", nullptr, nullptr);
     glfwMakeContextCurrent(window);
 
-    glfwSetKeyCallback(window, key_callback);
+//    glfwSetKeyCallback(window, key_callback);
+    EventSystem::Init(window, WindowManager::GLFW_WM);
 
     while(!InputHandler::IsKeyDown(GLFW_KEY_ESCAPE))
     {
