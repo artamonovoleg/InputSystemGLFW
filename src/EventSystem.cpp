@@ -7,26 +7,28 @@
 #include "EventSystem.hpp"
 #include "WindowEvent.hpp"
 
-bool EventSystem::m_WindowCanClose = false;
+#define CastEvent(ev) static_cast<const ##((EventCategory)ev.type)> (ev)
+
+bool EventSystem::m_WindowCanClose = true;
 
 void EventSystem::HandleNewEvent(const Event &ev)
 {
     switch (ev.category)
     {
         case EventCategory::KeyEvent:
-            InputHandler::UpdateKeyState(static_cast<const KeyEvent&>(ev).GetKey(), static_cast<const KeyEvent&>(ev).GetState());
+            InputHandler::UpdateKeyState(dynamic_cast<const KeyEvent&>(ev).GetKey(), dynamic_cast<const KeyEvent&>(ev).GetState());
             break;
         case EventCategory::MouseWheelEvent:
-            InputHandler::UpdateWheelState(static_cast<const MouseScrollEvent&>(ev).GetState());
+            InputHandler::UpdateWheelState(dynamic_cast<const MouseScrollEvent&>(ev).GetState());
             break;
         case EventCategory::MouseButtonEvent:
-            InputHandler::UpdateButtonState(static_cast<const MouseButtonEvent&>(ev).GetButton(), static_cast<const MouseButtonEvent&>(ev).GetState());
+            InputHandler::UpdateButtonState(dynamic_cast<const MouseButtonEvent&>(ev).GetButton(), dynamic_cast<const MouseButtonEvent&>(ev).GetState());
             break;
         case EventCategory::MouseMoveEvent:
-            InputHandler::UpdateCursorPosition(static_cast<const MouseMoveEvent&>(ev).GetPos());
+            InputHandler::UpdateCursorPosition(dynamic_cast<const MouseMoveEvent&>(ev).GetPos());
             break;
         case EventCategory::WindowResizeEvent:
-            glViewport(0, 0, static_cast<const WindowResizeEvent&>(ev).GetWidth(), static_cast<const WindowResizeEvent&>(ev).GetHeight());
+            glViewport(0, 0, dynamic_cast<const WindowResizeEvent&>(ev).GetWidth(), dynamic_cast<const WindowResizeEvent&>(ev).GetHeight());
             break;
         case EventCategory::WindowCloseEvent:
             if (m_WindowCanClose)

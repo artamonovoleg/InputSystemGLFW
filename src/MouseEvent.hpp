@@ -6,12 +6,7 @@
 
 #include "Event.hpp"
 
-enum class WheelState
-{
-    NONE,
-    SCROLL_UP,
-    SCROLL_DOWN
-};
+
 
 class MouseScrollEvent : public Event
 {
@@ -20,7 +15,7 @@ class MouseScrollEvent : public Event
     public:
         explicit MouseScrollEvent(WheelState state)
             : Event(EventCategory::MouseWheelEvent), m_State(state) {}
-        ~MouseScrollEvent() = default;
+        ~MouseScrollEvent() override = default;
         WheelState GetState() const { return m_State; }
 };
 
@@ -36,7 +31,7 @@ class MouseMoveEvent : public Event
     public:
         explicit MouseMoveEvent(CursorPos pos)
             : Event(EventCategory::MouseMoveEvent), m_CursorPos(pos) {}
-        ~MouseMoveEvent() = default;
+        ~MouseMoveEvent() override = default;
         CursorPos GetPos() const { return m_CursorPos; }
 };
 
@@ -54,7 +49,7 @@ class MouseButtonEvent : public Event
             else
                 m_State = PressState::RELEASED;
         }
-        ~MouseButtonEvent() = default;
+        ~MouseButtonEvent() override = default;
         int GetButton() const { return m_Button; }
         PressState GetState() const { return m_State; }
 };
@@ -65,7 +60,7 @@ class MousePressedEvent : public MouseButtonEvent
     public:
         explicit MousePressedEvent(int button)
             : MouseButtonEvent(button, EventType::MousePressedEvent){}
-        ~MousePressedEvent() = default;
+        ~MousePressedEvent() override = default;
 };
 
 class MouseReleasedEvent : public MouseButtonEvent
@@ -74,6 +69,6 @@ class MouseReleasedEvent : public MouseButtonEvent
     public:
         explicit MouseReleasedEvent(int button)
             : MouseButtonEvent(button, EventType::MouseReleasedEvent) {}
-        ~MouseReleasedEvent() = default;
+        ~MouseReleasedEvent() override = default;
 };
 

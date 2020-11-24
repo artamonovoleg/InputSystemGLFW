@@ -11,6 +11,7 @@ class WindowResizeEvent : public Event
         const int m_Width, m_Height;
     public:
         WindowResizeEvent(int width, int height) : Event(EventCategory::WindowResizeEvent), m_Width(width), m_Height(height) {}
+        ~WindowResizeEvent() override = default;
         int GetWidth() const { return m_Width; }
         int GetHeight() const { return m_Height; }
 };
@@ -20,4 +21,5 @@ class WindowCloseEvent : public Event
     private:
     public:
         WindowCloseEvent() : Event(EventCategory::WindowCloseEvent) {}
+        ~WindowCloseEvent() override = default;
 };

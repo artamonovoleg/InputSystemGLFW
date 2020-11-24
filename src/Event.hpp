@@ -28,11 +28,18 @@ enum class PressState
     RELEASED
 };
 
+enum class WheelState
+{
+    NONE,
+    SCROLL_UP,
+    SCROLL_DOWN
+};
+
 class Event
 {
     private:
     public:
         explicit Event(EventCategory t) : category(t) {};
-        ~Event() = default;
+        virtual ~Event() = default;
         const EventCategory category = EventCategory::None;
 };

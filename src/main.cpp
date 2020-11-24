@@ -18,7 +18,8 @@ int main()
     glfwMakeContextCurrent(window);
 
     EventSystem::Init();
-    EventSystem::WindowCanClose(true); // Later it can be used to disable closing while load smth or anything else
+    // Later it can be used to disable closing while load smth or anything else. Default value: true
+    EventSystem::WindowCanClose(true);
 
     while(!InputHandler::IsKeyDown(GLFW_KEY_ESCAPE) && !EventSystem::IsWindowClose())
     {

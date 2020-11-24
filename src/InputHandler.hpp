@@ -9,10 +9,10 @@
 class InputHandler
 {
     private:
-        friend class EventSystem;
-
         InputHandler() = default;
         ~InputHandler() = default;
+
+        friend class EventSystem;
 
         static PressState m_Keys[1024];
         static PressState m_Buttons[10];
@@ -24,7 +24,7 @@ class InputHandler
 
         static CursorPos m_CursorPos;
 
-        // Only event system can call this
+        // Only event system can call update methods
         static void UpdateKeyState(int key, PressState state);
         static void UpdateButtonState(int button, PressState state);
         static void UpdateWheelState(WheelState state);
