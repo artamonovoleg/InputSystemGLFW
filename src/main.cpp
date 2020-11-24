@@ -21,6 +21,9 @@ int main()
     // Later it can be used to disable closing while load smth or anything else. Default value: true
     EventSystem::WindowCanClose(true);
 
+    // You can also add your own callback
+    EventSystem::AddCallback(CallbackType::WindowResizeCallback, [](){ std::cout << "Window resized" << std::endl; });
+
     while(!InputHandler::IsKeyDown(GLFW_KEY_ESCAPE) && !EventSystem::IsWindowClose())
     {
         if (InputHandler::IsKeyPressed(GLFW_KEY_E))

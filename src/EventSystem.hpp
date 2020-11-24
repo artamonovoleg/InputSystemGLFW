@@ -3,12 +3,26 @@
 //
 
 #pragma once
+#include <map>
+#include <functional>
 #include "Event.hpp"
 #include "InputHandler.hpp"
+
+enum class CallbackType
+{
+    KeyCallback,
+    ButtonCallback,
+    ScrollCallback,
+    CursorPosCallback,
+    WindowResizeCallback,
+    WindowCloseCallback
+};
 
 class EventSystem
 {
     private:
+        static std::map <int, std::function<void()>> m_Callbacks;
+        static void PerformCallbacks(CallbackType type);
         static bool m_WindowCanClose;
 
         static void HandleNewEvent(const Event& ev);
@@ -21,6 +35,7 @@ class EventSystem
         static void OnWindowCloseAction();
     public:
         static void Init();
+        static void AddCallback(CallbackType type, std::function<void()> fun);
         static void WindowCanClose(bool value);
         static bool IsWindowClose();
 };

@@ -3,13 +3,25 @@
 //
 
 #include <GLFW/glfw3.h>
+#include <chrono>
+#include <iostream>
 
 #include "EventSystem.hpp"
 #include "WindowEvent.hpp"
 
-#define CastEvent(ev) static_cast<const ##((EventCategory)ev.type)> (ev)
-
 bool EventSystem::m_WindowCanClose = true;
+std::map <int, std::function<void()>> EventSystem::m_Callbacks;
+
+void EventSystem::AddCallback(CallbackType type, std::function<void()> fun)
+{
+    m_Callbacks[static_cast<int>(type)] = fun;
+}
+
+void EventSystem::PerformCallbacks(CallbackType type)
+{
+    if (m_Callbacks.count(static_cast<int>(type)))
+        m_Callbacks[static_cast<int>(type)]();
+}
 
 void EventSystem::HandleNewEvent(const Event &ev)
 {
@@ -88,21 +100,22 @@ void EventSystem::OnWindowCloseAction()
 
 void EventSystem::Init()
 {
-    glfwSetKeyCallback(glfwGetCurrentContext(), [](GLFWwindow* window, int key, int scancode, int action, int mods) { OnKeyAction(key, action); });
-    glfwSetMouseButtonCallback(glfwGetCurrentContext(), [] (GLFWwindow* window, int button, int action, int mods) { OnButtonAction(button, action); });
-    glfwSetScrollCallback(glfwGetCurrentContext(), [](GLFWwindow* window, double xoffset, double yoffset) { OnWheelAction(yoffset); });
-    glfwSetCursorPosCallback(glfwGetCurrentContext(), [](GLFWwindow* window, double xpos, double ypos) { OnCursorAction(xpos, ypos); });
-    glfwSetFramebufferSizeCallback(glfwGetCurrentContext(), [](GLFWwindow* window, int width, int height) { OnWindowResizeAction(width, height); });
-    glfwSetWindowCloseCallback(glfwGetCurrentContext(), [](GLFWwindow* window) { OnWindowCloseAction(); });
+    glfwSetKeyCallback(glfwGetCurrentContext(), [](GLFWwindow* window, int key, int scancode, int action, int mods)
+    { OnKeyAction(key, action); PerformCallbacks(CallbackType::KeyCallback); });
+    glfwSetMouseButtonCallback(glfwGetCurrentContext(), [] (GLFWwindow* window, int button, int action, int mods)
+    { OnButtonAction(button, action); PerformCallbacks(CallbackType::ButtonCallback); });
+    glfwSetScrollCallback(glfwGetCurrentContext(), [](GLFWwindow* window, double xoffset, double yoffset)
+    { OnWheelAction(yoffset); PerformCallbacks(CallbackType::ScrollCallback); });
+    glfwSetCursorPosCallback(glfwGetCurrentContext(), [](GLFWwindow* window, double xpos, double ypos)
+    { OnCursorAction(xpos, ypos); PerformCallbacks(CallbackType::CursorPosCallback); });
+    glfwSetFramebufferSizeCallback(glfwGetCurrentContext(), [](GLFWwindow* window, int width, int height)
+    { OnWindowResizeAction(width, height); PerformCallbacks(CallbackType::WindowResizeCallback); });
+    glfwSetWindowCloseCallback(glfwGetCurrentContext(), [](GLFWwindow* window)
+    { OnWindowCloseAction(); PerformCallbacks(CallbackType::WindowCloseCallback); });
 }
 
 bool EventSystem::IsWindowClose()
 {
     return (m_WindowCanClose && glfwWindowShouldClose(glfwGetCurrentContext()));
 }
-
-
-
-
-
 
