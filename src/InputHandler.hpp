@@ -9,6 +9,8 @@
 class InputHandler
 {
     private:
+        friend class EventSystem;
+
         InputHandler() = default;
         ~InputHandler() = default;
 
@@ -19,18 +21,25 @@ class InputHandler
         static bool IsPressed(int value, PressState* buffer);
         static bool IsReleased(int value, PressState* buffer);
         static bool IsDown(int value, PressState* buffer);
-    public:
+
+        static CursorPos m_CursorPos;
+
+        // Only event system can call this
         static void UpdateKeyState(int key, PressState state);
+        static void UpdateButtonState(int button, PressState state);
+        static void UpdateWheelState(WheelState state);
+        static void UpdateCursorPosition(CursorPos pos);
+    public:
         static bool IsKeyPressed(int key);
         static bool IsKeyDown(int key);
         static bool IsKeyReleased(int key);
 
-        static void UpdateButtonState(int button, PressState state);
         static bool IsButtonPressed(int button);
         static bool IsButtonDown(int button);
         static bool IsButtonReleased(int button);
 
-        static void UpdateWheelState(WheelState state);
         static bool IsScrollingUp();
         static bool IsScrollingDown();
+
+        static CursorPos GetMousePosition();
 };

@@ -20,8 +20,24 @@ class MouseScrollEvent : public Event
     public:
         explicit MouseScrollEvent(WheelState state)
             : Event(EventCategory::MouseWheelEvent), m_State(state) {}
-        ~MouseScrollEvent() override = default;
+        ~MouseScrollEvent() = default;
         WheelState GetState() const { return m_State; }
+};
+
+struct CursorPos
+{
+    double x, y;
+};
+
+class MouseMoveEvent : public Event
+{
+    private:
+        const CursorPos m_CursorPos;
+    public:
+        explicit MouseMoveEvent(CursorPos pos)
+            : Event(EventCategory::MouseMoveEvent), m_CursorPos(pos) {}
+        ~MouseMoveEvent() = default;
+        CursorPos GetPos() const { return m_CursorPos; }
 };
 
 class MouseButtonEvent : public Event
@@ -38,7 +54,7 @@ class MouseButtonEvent : public Event
             else
                 m_State = PressState::RELEASED;
         }
-        ~MouseButtonEvent() override = default;
+        ~MouseButtonEvent() = default;
         int GetButton() const { return m_Button; }
         PressState GetState() const { return m_State; }
 };
@@ -49,7 +65,7 @@ class MousePressedEvent : public MouseButtonEvent
     public:
         explicit MousePressedEvent(int button)
             : MouseButtonEvent(button, EventType::MousePressedEvent){}
-        ~MousePressedEvent() override = default;
+        ~MousePressedEvent() = default;
 };
 
 class MouseReleasedEvent : public MouseButtonEvent
@@ -58,6 +74,6 @@ class MouseReleasedEvent : public MouseButtonEvent
     public:
         explicit MouseReleasedEvent(int button)
             : MouseButtonEvent(button, EventType::MouseReleasedEvent) {}
-        ~MouseReleasedEvent() override = default;
+        ~MouseReleasedEvent() = default;
 };
 

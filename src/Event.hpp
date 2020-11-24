@@ -9,8 +9,8 @@ enum class EventCategory
 {
     None,
     KeyEvent,
-    MouseButtonEvent,
-    MouseWheelEvent
+    MouseButtonEvent, MouseWheelEvent, MouseMoveEvent,
+    WindowResizeEvent, WindowCloseEvent
 };
 
 enum class EventType
@@ -22,19 +22,17 @@ enum class EventType
 
 enum class PressState
 {
-        NONE,
-        PRESSED,
-        HELD,
-        RELEASED
+    NONE,
+    PRESSED,
+    HELD,
+    RELEASED
 };
 
 class Event
 {
     private:
     public:
-        Event(EventCategory t) : category(t) {};
-        virtual ~Event() = 0;
+        explicit Event(EventCategory t) : category(t) {};
+        ~Event() = default;
         const EventCategory category = EventCategory::None;
 };
-
-inline Event::~Event(){}

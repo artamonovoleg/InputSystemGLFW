@@ -13,7 +13,9 @@ class EventSystem
         static void OnKeyAction(int key, int action);
         static void OnButtonAction(int button, int action);
         static void OnWheelAction(double offset);
-
+        static void OnCursorAction(double x, double y);
+        static void OnWindowResizeAction(int width, int height);
+        static void OnWindowCloseAction();
     public:
         static void Init();
         static void HandleNewEvent(const Event& ev);

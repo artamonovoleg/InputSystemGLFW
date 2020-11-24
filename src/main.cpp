@@ -38,6 +38,8 @@ int main()
             std::cout << "Scroll up" << std::endl;
         if (InputHandler::IsScrollingDown())
             std::cout << "Scroll down" << std::endl;
+        if (InputHandler::GetMousePosition().x > width / 2 && InputHandler::GetMousePosition().y > height / 2)
+            std::cout << "Cursor in second quoter of screen. Pos: " << InputHandler::GetMousePosition().x << " " << InputHandler::GetMousePosition().y << std::endl;
         glfwPollEvents();
     }
 

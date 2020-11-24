@@ -1,5 +1,5 @@
 //
-// Created by user on 23.11.2020.
+// Created by artamonovoleg on 23.11.2020.
 //
 
 #include "InputHandler.hpp"
@@ -7,6 +7,7 @@
 PressState InputHandler::m_Keys[1024] = { PressState::NONE };
 PressState InputHandler::m_Buttons[10] = { PressState::NONE };
 WheelState InputHandler::m_WheelState = WheelState::NONE;
+CursorPos InputHandler::m_CursorPos = { 0, 0 };
 
 // Universal methods to check states of keys or buttons
 bool InputHandler::IsPressed(int value, PressState *buffer)
@@ -75,6 +76,10 @@ bool InputHandler::IsScrollingDown()
     }
     return ret;
 }
+
+// Cursor
+void InputHandler::UpdateCursorPosition(CursorPos pos) { m_CursorPos = pos; }
+CursorPos InputHandler::GetMousePosition() { return m_CursorPos; }
 
 
 

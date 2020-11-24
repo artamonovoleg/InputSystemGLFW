@@ -18,7 +18,7 @@ class KeyEvent : public Event
             else
                 m_State = PressState::RELEASED;
         };
-        ~KeyEvent() override = default;
+        ~KeyEvent() = default;
         int GetKey() const { return m_Key; }
         PressState GetState() const { return m_State; }
 };
@@ -28,7 +28,7 @@ class KeyPressedEvent : public KeyEvent
     private:
     public:
         explicit KeyPressedEvent(int key) : KeyEvent(key, EventType::KeyPressedEvent) {};
-        ~KeyPressedEvent() override = default;
+        ~KeyPressedEvent() = default;
 };
 
 class KeyReleasedEvent : public KeyEvent
@@ -36,5 +36,5 @@ class KeyReleasedEvent : public KeyEvent
     private:
     public:
         explicit KeyReleasedEvent(int key) : KeyEvent(key, EventType::KeyReleasedEvent) {};
-        ~KeyReleasedEvent() override = default;
+        ~KeyReleasedEvent() = default;
 };
