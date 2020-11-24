@@ -20,11 +20,21 @@ enum class EventType
     MousePressedEvent, MouseReleasedEvent
 };
 
+enum class PressState
+{
+        NONE,
+        PRESSED,
+        HELD,
+        RELEASED
+};
+
 class Event
 {
     private:
     public:
         Event(EventCategory t) : category(t) {};
-        ~Event() = default;
+        virtual ~Event() = 0;
         const EventCategory category = EventCategory::None;
 };
+
+inline Event::~Event(){}

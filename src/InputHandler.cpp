@@ -4,74 +4,51 @@
 
 #include "InputHandler.hpp"
 
-KeyState InputHandler::m_Keys[1024] = { KeyState::NONE };
-ButtonState InputHandler::m_Buttons[10] = { ButtonState::NONE };
+PressState InputHandler::m_Keys[1024] = { PressState::NONE };
+PressState InputHandler::m_Buttons[10] = { PressState::NONE };
 WheelState InputHandler::m_WheelState = WheelState::NONE;
 
-void InputHandler::UpdateKeyState(int key, KeyState state)
-{
-    m_Keys[key] = state;
-}
-
-bool InputHandler::IsKeyPressed(int key)
+// Universal methods to check states of keys or buttons
+bool InputHandler::IsPressed(int value, PressState *buffer)
 {
     bool ret = false;
-    if (m_Keys[key] == KeyState::PRESSED)
+    if (buffer[value] == PressState::PRESSED)
     {
         ret = true;
-        m_Keys[key] = KeyState::HELD;
+        buffer[value] = PressState::HELD;
     }
     return ret;
 }
 
-bool InputHandler::IsKeyDown(int key)
+bool InputHandler::IsDown(int value, PressState *buffer)
 {
-    return (m_Keys[key] == KeyState::PRESSED || m_Keys[key] == KeyState::HELD);
+    return (buffer[value] == PressState::PRESSED || buffer[value] == PressState::HELD);
 }
 
-bool InputHandler::IsKeyReleased(int key)
+bool InputHandler::IsReleased(int value, PressState *buffer)
 {
     bool ret = false;
-    if (m_Keys[key] == KeyState::RELEASED)
+    if (buffer[value] == PressState::RELEASED)
     {
         ret = true;
-        m_Keys[key] = KeyState::NONE;
+        buffer[value] = PressState::NONE;
     }
     return ret;
 }
 
-void InputHandler::UpdateButtonState(int button, ButtonState state)
-{
-    m_Buttons[button] = state;
-}
+// Keyboard
+void InputHandler::UpdateKeyState(int key, PressState state) { m_Keys[key] = state; }
+bool InputHandler::IsKeyPressed(int key) { return IsPressed(key, m_Keys); }
+bool InputHandler::IsKeyDown(int key) { return IsDown(key, m_Keys); }
+bool InputHandler::IsKeyReleased(int key) { return IsReleased(key, m_Keys); }
 
-bool InputHandler::IsButtonPressed(int button)
-{
-    bool ret = false;
-    if (m_Buttons[button] == ButtonState::PRESSED)
-    {
-        ret = true;
-        m_Buttons[button] = ButtonState::HELD;
-    }
-    return ret;
-}
+// Mouse buttons
+void InputHandler::UpdateButtonState(int button, PressState state) { m_Buttons[button] = state; }
+bool InputHandler::IsButtonPressed(int button) { return IsPressed(button, m_Buttons); }
+bool InputHandler::IsButtonDown(int button) { return IsDown(button, m_Buttons); }
+bool InputHandler::IsButtonReleased(int button) { return IsReleased(button, m_Buttons); }
 
-bool InputHandler::IsButtonDown(int button)
-{
-    return (m_Buttons[button] == ButtonState::PRESSED || m_Buttons[button] == ButtonState::HELD);
-}
-
-bool InputHandler::IsButtonReleased(int button)
-{
-    bool ret = false;
-    if (m_Buttons[button] == ButtonState::RELEASED)
-    {
-        ret = true;
-        m_Buttons[button] = ButtonState::NONE;
-    }
-    return ret;
-}
-
+// Wheel scrolling
 void InputHandler::UpdateWheelState(WheelState state)
 {
     m_WheelState = state;
@@ -98,3 +75,8 @@ bool InputHandler::IsScrollingDown()
     }
     return ret;
 }
+
+
+
+
+

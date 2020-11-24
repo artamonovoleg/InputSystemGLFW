@@ -5,42 +5,36 @@
 #pragma once
 #include "Event.hpp"
 
-enum class KeyState
-{
-    NONE,
-    PRESSED,
-    HELD,
-    RELEASED
-};
-
 class KeyEvent : public Event
 {
     private:
         const int m_Key;
-        KeyState m_State;
+        PressState m_State;
     public:
         KeyEvent(int key, EventType t) : Event(EventCategory::KeyEvent), m_Key(key)
         {
             if (t == EventType::KeyPressedEvent)
-                m_State = KeyState::PRESSED;
+                m_State = PressState::PRESSED;
             else
-                m_State = KeyState::RELEASED;
+                m_State = PressState::RELEASED;
         };
-
+        ~KeyEvent() override = default;
         int GetKey() const { return m_Key; }
-        KeyState GetState() const { return m_State; }
+        PressState GetState() const { return m_State; }
 };
 
 class KeyPressedEvent : public KeyEvent
 {
     private:
     public:
-        KeyPressedEvent(int key) : KeyEvent(key, EventType::KeyPressedEvent) {};
+        explicit KeyPressedEvent(int key) : KeyEvent(key, EventType::KeyPressedEvent) {};
+        ~KeyPressedEvent() override = default;
 };
 
 class KeyReleasedEvent : public KeyEvent
 {
     private:
     public:
-        KeyReleasedEvent(int key) : KeyEvent(key, EventType::KeyReleasedEvent) {};
+        explicit KeyReleasedEvent(int key) : KeyEvent(key, EventType::KeyReleasedEvent) {};
+        ~KeyReleasedEvent() override = default;
 };

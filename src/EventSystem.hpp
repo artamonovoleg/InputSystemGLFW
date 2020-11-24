@@ -1,15 +1,10 @@
 //
-// Created by user on 23.11.2020.
+// Created by artamonovoleg on 23.11.2020.
 //
 
 #pragma once
 #include "Event.hpp"
 #include "InputHandler.hpp"
-
-enum class WindowManager
-{
-    GLFW_WM
-};
 
 class EventSystem
 {
