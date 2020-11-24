@@ -5,6 +5,8 @@
 #include "EventSystem.hpp"
 #include <GLFW/glfw3.h>
 
+bool EventSystem::m_WindowCanClose = false;
+
 void EventSystem::HandleNewEvent(const Event &ev)
 {
     switch (ev.category)
@@ -21,6 +23,11 @@ void EventSystem::HandleNewEvent(const Event &ev)
         case EventCategory::None:
             break;
     }
+}
+
+void EventSystem::WindowCanClose(bool value)
+{
+    m_WindowCanClose = value;
 }
 
 void EventSystem::OnKeyAction(int key, int action)
@@ -55,6 +62,15 @@ void EventSystem::Init()
     glfwSetKeyCallback(glfwGetCurrentContext(), [](GLFWwindow* window, int key, int scancode, int action, int mods) { OnKeyAction(key, action); });
     glfwSetMouseButtonCallback(glfwGetCurrentContext(), [] (GLFWwindow* window, int button, int action, int mods) { OnButtonAction(button, action); });
     glfwSetScrollCallback(glfwGetCurrentContext(), [](GLFWwindow* window, double xoffset, double yoffset) { OnWheelAction(yoffset); });
+    glfwSetFramebufferSizeCallback(glfwGetCurrentContext(), [](GLFWwindow* window, int width, int height) { glViewport(0, 0, width, height); });
+    glfwSetWindowCloseCallback(glfwGetCurrentContext(), [](GLFWwindow* window) { if (m_WindowCanClose) glfwSetWindowShouldClose(glfwGetCurrentContext(), GLFW_TRUE); });
 }
+
+bool EventSystem::IsWindowClose()
+{
+    return (m_WindowCanClose && glfwWindowShouldClose(glfwGetCurrentContext()));
+}
+
+
 
 

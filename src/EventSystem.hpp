@@ -9,11 +9,14 @@
 class EventSystem
 {
     private:
+        static bool m_WindowCanClose;
         static void OnKeyAction(int key, int action);
         static void OnButtonAction(int button, int action);
         static void OnWheelAction(double offset);
+
     public:
         static void Init();
         static void HandleNewEvent(const Event& ev);
-
+        static void WindowCanClose(bool value);
+        static bool IsWindowClose();
 };

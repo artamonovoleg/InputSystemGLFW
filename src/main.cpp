@@ -18,8 +18,9 @@ int main()
     glfwMakeContextCurrent(window);
 
     EventSystem::Init();
+    EventSystem::WindowCanClose(true); // Later it can be used to disable closing while load smth or anything else
 
-    while(!InputHandler::IsKeyDown(GLFW_KEY_ESCAPE))
+    while(!InputHandler::IsKeyDown(GLFW_KEY_ESCAPE) && !EventSystem::IsWindowClose())
     {
         if (InputHandler::IsKeyPressed(GLFW_KEY_E))
             std::cout << "E pressed" << std::endl;
