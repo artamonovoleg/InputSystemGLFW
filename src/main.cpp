@@ -2,56 +2,54 @@
 #include <GLFW/glfw3.h>
 
 #include "EventSystem.hpp"
-#include "InputHandler.hpp"
-#include "WindowEvent.hpp"
+#include "InputSystem.hpp"
 
-void OnWindowResizeEvent(const WindowResizeEvent& event)
+void OnWindowClose(bool& isClosed)
 {
-    std::cout << "width: " << event.GetWidth() << " height: " << event.GetHeight() << std::endl;
+    isClosed = true;
 }
 
 int main()
 {
     glfwInit();
-    GLFWwindow* window = nullptr;
     const int width = 800;
     const int height = 600;
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(width, height, "Events", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(width, height, "Events", nullptr, nullptr);
+    bool isClosed = false;
+
     glfwMakeContextCurrent(window);
 
     EventSystem::Init();
-    // Later it can be used to disable closing while load smth or anything else. Default value: true
-    EventSystem::WindowCanClose(true);
+    InputSystem::Init();
 
-    // This is how you can add event listener. Now with cast. rewrite later.
-    EventSystem::AddListener(EventCategory::WindowResizeEvent, [&](const Event& event)
-                             { OnWindowResizeEvent(dynamic_cast<const WindowResizeEvent&>(event)); });
-    InputHandler input;
-    while(!input.IsKeyDown(GLFW_KEY_ESCAPE) && !EventSystem::IsWindowClose())
+    // Add simple listener
+    EventSystem::AddListener(EventCategory::WindowCloseEvent, [&](const Event& event) { OnWindowClose(isClosed); });
+
+    while(!isClosed)
     {
-        if (input.IsKeyPressed(GLFW_KEY_E))
+        if (InputSystem::IsKeyPressed(GLFW_KEY_E))
             std::cout << "E pressed" << std::endl;
-        if (input.IsKeyReleased(GLFW_KEY_Q))
+        if (InputSystem::IsKeyReleased(GLFW_KEY_Q))
             std::cout << "Q released" << std::endl;
-        if (input.IsKeyDown(GLFW_KEY_W))
+        if (InputSystem::IsKeyDown(GLFW_KEY_W))
             std::cout << "W down" << std::endl;
-        if (input.IsButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
+        if (InputSystem::IsButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
             std::cout << "LMB pressed" << std::endl;
-        if (input.IsButtonDown(GLFW_MOUSE_BUTTON_RIGHT))
+        if (InputSystem::IsButtonDown(GLFW_MOUSE_BUTTON_RIGHT))
             std::cout << "RMB held" << std::endl;
-        if (input.IsButtonReleased(GLFW_MOUSE_BUTTON_MIDDLE))
+        if (InputSystem::IsButtonReleased(GLFW_MOUSE_BUTTON_MIDDLE))
             std::cout << "Wheel released" << std::endl;
-        if (input.IsScrollingUp())
+        if (InputSystem::IsScrollingUp())
             std::cout << "Scroll up" << std::endl;
-        if (input.IsScrollingDown())
+        if (InputSystem::IsScrollingDown())
             std::cout << "Scroll down" << std::endl;
-        if (input.GetMousePosition().x > width / 2 && input.GetMousePosition().y > height / 2)
-            std::cout << "Cursor in second quoter of screen. Pos: " << input.GetMousePosition().x << " " << input.GetMousePosition().y << std::endl;
-        glfwPollEvents();
+        if (InputSystem::GetMousePosition().x > width / 2 && InputSystem::GetMousePosition().y > height / 2)
+            std::cout << "Cursor in second quoter of screen. Pos: " << InputSystem::GetMousePosition().x << " " << InputSystem::GetMousePosition().y << std::endl;
+        EventSystem::PollEvents();
     }
 
     glfwTerminate();

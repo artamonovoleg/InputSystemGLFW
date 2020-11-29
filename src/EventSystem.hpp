@@ -7,13 +7,12 @@
 #include <list>
 #include <functional>
 #include "Event.hpp"
-#include "InputHandler.hpp"
+#include "InputSystem.hpp"
 
 class EventSystem
 {
     private:
         static std::unordered_map<EventCategory, std::list<std::function<void(const Event&)>>> listeners;
-        static bool m_WindowCanClose;
 
         static void SendEvent(const Event& ev);
 
@@ -25,11 +24,6 @@ class EventSystem
         static void OnWindowCloseAction();
     public:
         static void Init();
-        static void AddListener(EventCategory eventId, std::function<void(const Event&)> const& listener)
-        {
-            listeners[eventId].push_back(listener);
-        }
-
-        static void WindowCanClose(bool value);
-        static bool IsWindowClose();
+        static void PollEvents();
+        static void AddListener(EventCategory eventId, std::function<void(const Event&)> const& listener);
 };

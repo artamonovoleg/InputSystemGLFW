@@ -9,45 +9,17 @@
 #include "EventSystem.hpp"
 #include "WindowEvent.hpp"
 
-bool EventSystem::m_WindowCanClose = true;
 std::unordered_map<EventCategory, std::list<std::function<void(const Event&)>>> EventSystem::listeners;
+
+void EventSystem::AddListener(EventCategory eventId, const std::function<void(const Event &)> &listener)
+{
+    listeners[eventId].push_back(listener);
+}
 
 void EventSystem::SendEvent(const Event &ev)
 {
     for (auto const& listener : listeners[ev.category])
-    {
         listener(ev);
-    }
-//
-//    switch (ev.category)
-//    {
-//        case EventCategory::KeyEvent:
-//            InputHandler::UpdateKeyState(dynamic_cast<const KeyEvent&>(ev).GetKey(), dynamic_cast<const KeyEvent&>(ev).GetState());
-//            break;
-//        case EventCategory::MouseWheelEvent:
-//            InputHandler::UpdateWheelState(dynamic_cast<const MouseScrollEvent&>(ev).GetState());
-//            break;
-//        case EventCategory::MouseButtonEvent:
-//            InputHandler::UpdateButtonState(dynamic_cast<const MouseButtonEvent&>(ev).GetButton(), dynamic_cast<const MouseButtonEvent&>(ev).GetState());
-//            break;
-//        case EventCategory::MouseMoveEvent:
-//            InputHandler::UpdateCursorPosition(dynamic_cast<const MouseMoveEvent&>(ev).GetPos());
-//            break;
-//        case EventCategory::WindowResizeEvent:
-//            glViewport(0, 0, dynamic_cast<const WindowResizeEvent&>(ev).GetWidth(), dynamic_cast<const WindowResizeEvent&>(ev).GetHeight());
-//            break;
-//        case EventCategory::WindowCloseEvent:
-//            if (m_WindowCanClose)
-//                glfwSetWindowShouldClose(glfwGetCurrentContext(), GLFW_TRUE);
-//            break;
-//        case EventCategory::None:
-//            break;
-//    }
-}
-
-void EventSystem::WindowCanClose(bool value)
-{
-    m_WindowCanClose = value;
 }
 
 void EventSystem::OnKeyAction(int key, int action)
@@ -89,7 +61,7 @@ void EventSystem::OnWindowResizeAction(int width, int height)
 
 void EventSystem::OnWindowCloseAction()
 {
-    EventSystem::SendEvent(WindowCloseEvent());
+    EventSystem::SendEvent(WindowCloseEvent {});
 }
 
 void EventSystem::Init()
@@ -108,8 +80,7 @@ void EventSystem::Init()
     { OnWindowCloseAction(); });
 }
 
-bool EventSystem::IsWindowClose()
+void EventSystem::PollEvents()
 {
-    return (m_WindowCanClose && glfwWindowShouldClose(glfwGetCurrentContext()));
+    glfwPollEvents();
 }
-
