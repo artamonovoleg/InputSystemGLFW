@@ -9,37 +9,36 @@
 class InputHandler
 {
     private:
-        InputHandler() = default;
-        ~InputHandler() = default;
 
-        friend class EventSystem;
+        PressState m_Keys[1024];
+        PressState m_Buttons[10];
+        WheelState m_WheelState;
 
-        static PressState m_Keys[1024];
-        static PressState m_Buttons[10];
-        static WheelState m_WheelState;
+        bool IsPressed(int value, PressState* buffer);
+        bool IsReleased(int value, PressState* buffer);
+        bool IsDown(int value, PressState* buffer);
 
-        static bool IsPressed(int value, PressState* buffer);
-        static bool IsReleased(int value, PressState* buffer);
-        static bool IsDown(int value, PressState* buffer);
-
-        static CursorPos m_CursorPos;
+        CursorPos m_CursorPos;
 
         // Only event system can call update methods
-        static void UpdateKeyState(int key, PressState state);
-        static void UpdateButtonState(int button, PressState state);
-        static void UpdateWheelState(WheelState state);
-        static void UpdateCursorPosition(CursorPos pos);
+        void OnKeyEvent(const KeyEvent& event);
+        void OnButtonEvent(const MouseButtonEvent& event);
+        void OnScrollEvent(const MouseScrollEvent& event);
+        void OnMouseMoveEvent(const MouseMoveEvent& event);
     public:
-        static bool IsKeyPressed(int key);
-        static bool IsKeyDown(int key);
-        static bool IsKeyReleased(int key);
+        InputHandler();
+        ~InputHandler() = default;
 
-        static bool IsButtonPressed(int button);
-        static bool IsButtonDown(int button);
-        static bool IsButtonReleased(int button);
+        bool IsKeyPressed(int key);
+        bool IsKeyDown(int key);
+        bool IsKeyReleased(int key);
 
-        static bool IsScrollingUp();
-        static bool IsScrollingDown();
+        bool IsButtonPressed(int button);
+        bool IsButtonDown(int button);
+        bool IsButtonReleased(int button);
 
-        static CursorPos GetMousePosition();
+        bool IsScrollingUp();
+        bool IsScrollingDown();
+
+        CursorPos GetMousePosition();
 };

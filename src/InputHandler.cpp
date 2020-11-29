@@ -3,11 +3,35 @@
 //
 
 #include "InputHandler.hpp"
+#include "EventSystem.hpp"
 
-PressState InputHandler::m_Keys[1024] = { PressState::NONE };
-PressState InputHandler::m_Buttons[10] = { PressState::NONE };
-WheelState InputHandler::m_WheelState = WheelState::NONE;
-CursorPos InputHandler::m_CursorPos = { 0, 0 };
+void InputHandler::OnKeyEvent(const KeyEvent &event)
+{
+    m_Keys[event.GetKey()] = event.GetState();
+}
+
+void InputHandler::OnButtonEvent(const MouseButtonEvent &event)
+{
+    m_Buttons[event.GetButton()] = event.GetState();
+}
+
+void InputHandler::OnScrollEvent(const MouseScrollEvent &event)
+{
+    m_WheelState = event.GetState();
+}
+
+void InputHandler::OnMouseMoveEvent(const MouseMoveEvent &event)
+{
+    m_CursorPos = event.GetPos();
+}
+
+InputHandler::InputHandler()
+{
+    EventSystem::AddListener(EventCategory::KeyEvent, [&](const Event& event) { OnKeyEvent(dynamic_cast<const KeyEvent&>(event)); });
+    EventSystem::AddListener(EventCategory::MouseButtonEvent, [&](const Event& event) { OnButtonEvent(dynamic_cast<const MouseButtonEvent&>(event)); });
+    EventSystem::AddListener(EventCategory::MouseMoveEvent, [&](const Event& event) { OnMouseMoveEvent(dynamic_cast<const MouseMoveEvent&>(event)); });
+    EventSystem::AddListener(EventCategory::MouseWheelEvent, [&](const Event& event) { OnScrollEvent(dynamic_cast<const MouseScrollEvent&>(event)); });
+}
 
 bool InputHandler::IsPressed(int value, PressState *buffer)
 {
@@ -36,20 +60,13 @@ bool InputHandler::IsReleased(int value, PressState *buffer)
     return ret;
 }
 
-void InputHandler::UpdateKeyState(int key, PressState state) { m_Keys[key] = state; }
 bool InputHandler::IsKeyPressed(int key) { return IsPressed(key, m_Keys); }
 bool InputHandler::IsKeyDown(int key) { return IsDown(key, m_Keys); }
 bool InputHandler::IsKeyReleased(int key) { return IsReleased(key, m_Keys); }
 
-void InputHandler::UpdateButtonState(int button, PressState state) { m_Buttons[button] = state; }
 bool InputHandler::IsButtonPressed(int button) { return IsPressed(button, m_Buttons); }
 bool InputHandler::IsButtonDown(int button) { return IsDown(button, m_Buttons); }
 bool InputHandler::IsButtonReleased(int button) { return IsReleased(button, m_Buttons); }
-
-void InputHandler::UpdateWheelState(WheelState state)
-{
-    m_WheelState = state;
-}
 
 bool InputHandler::IsScrollingUp()
 {
@@ -73,5 +90,4 @@ bool InputHandler::IsScrollingDown()
     return ret;
 }
 
-void InputHandler::UpdateCursorPosition(CursorPos pos) { m_CursorPos = pos; }
 CursorPos InputHandler::GetMousePosition() { return m_CursorPos; }
